@@ -67,7 +67,7 @@ class Game extends Component {
     //camera.position.y = 100;
     //camera.position.x= 50;
     //camera.lookAt(player.cube.position);
-    var quaternion = new THREE.quaternion()
+    
     camera.position.z = cube.position.z + 10;
     var t = 0;
 
@@ -90,8 +90,8 @@ class Game extends Component {
       // cube.position.y = Math.sin(t) + 0;
 
       cube.lookAt(playerTarg.x, playerTarg.y, playerTarg.z);
-      quaternion.setFromAxisAngle(cube.getWorldDirection(), Math.PI / 2);
-      cube.rotation.setEulerFromQuaternion(quaternion);
+      // quaternion.setFromAxisAngle(cube.getWorldDirection(), Math.PI / 2);
+      // cube.rotation.setEulerFromQuaternion(quaternion);
       // cube.rotation.y = t*10;
       console.log('tube ', tube)
       console.log('cube', cube)

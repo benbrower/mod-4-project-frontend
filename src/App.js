@@ -7,8 +7,8 @@ import Test from './components/Test';
 function App() {
   return (
     <div className="App">
-      {/* < Game /> */}
-      < Test />
+      { /*< Game /> */}
+  { < Test />}
     </div>
   );
 }
