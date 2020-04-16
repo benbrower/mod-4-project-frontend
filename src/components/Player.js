@@ -3,23 +3,17 @@ import * as THREE from "./three";
 // import Game from './Game';
 
 class Player {
-  constructor() {
+  constructor(geometry, material) {
     this.position = {
       x: window.innerWidth / 2,
       y: window.innerHeight / 2,
       z: 0,
     };
-    this.speed = 1;
+    this.speed= 1;
     this.diameter = 1;
     this.color = "0x00ff00";
-    // this.geometry = new THREE.BoxGeometry(
-    //   this.diameter,
-    //   this.diameter,
-    //   this.diameter, 100, 100
-    // );
-    this.geometry = new THREE.TorusKnotGeometry(2, 0.5, 100, 100)
-    // this.geometry = new THREE.DodecahedronGeometry(5)
-    this.material = new THREE.MeshBasicMaterial({ color: this.color });
+    this.geometry = geometry;
+    this.material = material;
     this.cube = new THREE.Mesh(this.geometry, this.material);
   }
   getPlayer() {
