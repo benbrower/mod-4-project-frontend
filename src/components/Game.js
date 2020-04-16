@@ -68,7 +68,7 @@ class Game extends Component {
     var geometry = new THREE.BoxGeometry(1, 1, 1);
     var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
     const player = new Player(geometry, material);
-    player.cube.position.set(0, -5, 0);
+    player.cube.position.set(0, 5, 0);
     playerSlice.add(player.cube);
 
     // barriers
@@ -77,7 +77,7 @@ class Game extends Component {
     for (let i = 0; i < 100; i++) {
       var barrierMat = new THREE.MeshBasicMaterial({
         color: new THREE.Color(
-          `rgb(${Math.floor(Math.random() * 256)}, 
+          `rgb(${Math.floor(Math.random() * 256)},
           ${Math.floor(Math.random() * 256)},
            ${Math.floor(Math.random() * 256)})`
         ),
@@ -105,24 +105,42 @@ class Game extends Component {
     tube.name = "tube";
     // console.log(tube);
 
-    const checkCollision = () =>{
-      var originPoint = player.cube.position.clone();
-      // console.log(barriers)
-    	for (var vertexIndex = 0; vertexIndex < player.cube.geometry.vertices.length; vertexIndex++)
-    	{
+    function checkCollision (){
 
-    		var ray = new THREE.Raycaster( playerSlice.getWorldPosition(player.cube.position), playerSlice.getWorldPosition(player.cube.geometry.vertices[vertexIndex]));
-        var collisionResults = ray.intersectObjects( barriers.map(b => getWorld(b)) );
-          
-         
-    		if ( collisionResults.length > 0)
-    		{
-          console.log("hit");
-          // hit = true;
-         }
+    //  console.log(ppos);
+    //console.log();
+      for(let i =0; i<barriers.length; i++)
+      {
+
+        //console.log(barriers[i].position.distanceTo( ppos));
+
+        if( barriers[i].position.distanceTo( cameraSlice.position) < .1 )
+        {
+          //console.log(barriers[i].getWorldPosition(barriers[i].children[0].children[0].position).distanceTo(cameraSlice.getWorldPosition(playerSlice.children[0].position )));
+          //console.log( barriers[i].children[0].children[0].rotation.z - (playerSlice.rotation.z));
+          if( barriers[i].children[0].children[0].rotation.z - (playerSlice.rotation.z) > -.28 && barriers[i].children[0].children[0].rotation.z - (playerSlice.rotation.z) <.28 ) {
+             console.log("yeet hit" );
+           }
+
+        }
       }
+      // var originPoint = player.cube.position.clone();
+      // // console.log(barriers)
+    	// for (var vertexIndex = 0; vertexIndex < player.cube.geometry.vertices.length; vertexIndex++)
+    	// {
+      //
+    	// 	var ray = new THREE.Raycaster( playerSlice.getWorldPosition(player.cube.position), playerSlice.getWorldPosition(player.cube.geometry.vertices[vertexIndex]));
+      //   var collisionResults = ray.intersectObjects( barriers.map(b => getWorld(b)) );
+      //
+      //
+    	// 	if ( collisionResults.length > 0)
+    	// 	{
+      //     console.log("hit");
+      //     // hit = true;
+      //    }
+      // }
     }
-    function getWorld(b) { 
+    function getWorld(b) {
       console.log(b);
       //return b.getWorldposition(b.barrierSlice.b1.cube.position);
     }
@@ -141,7 +159,7 @@ class Game extends Component {
 
     var animate = function () {
       requestAnimationFrame(animate);
-      // checkCollision();
+
       var delta = 0.0001;
       t += delta;
 
@@ -160,14 +178,15 @@ class Game extends Component {
 
       if (key === "a") {
         console.log(key);
-        playerSlice.rotation.z += 0.1;
+        playerSlice.rotation.z += 0.01;
       }
       if (key === "d") {
         // console.log(key);
-        playerSlice.rotation.z -= 0.1;
+        playerSlice.rotation.z -= 0.01;
       }
 
       renderer.render(scene, camera);
+      checkCollision();
     };
     animate();
   }
