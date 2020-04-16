@@ -26,8 +26,8 @@ class Game extends Component {
       //x    z     y
       [0, 0, 0],
       [500, 500, 100],
-      [0, 1000, -100],
-      [-500, 500, 0],
+      [-500,500,-100],
+      [500,500,200]
     ];
 
     //Convert the array of points into vertices
@@ -72,7 +72,7 @@ class Game extends Component {
     playerSlice.add(player.cube);
 
     // barriers
-    const barriers = [];
+    let barriers = [];
     var barrierGeo = new THREE.BoxGeometry(1.5, 1.5, 1.5);
     for (let i = 10; i < 1000; i++) {
       var barrierMat = new THREE.MeshBasicMaterial({
@@ -110,17 +110,18 @@ class Game extends Component {
 
     //  console.log(ppos);
     //console.log();
-      for(let i =0; i<barriers.length; i++)
+      for(let i =0; i<990; i++)
       {
 
         //console.log(barriers[i].position.distanceTo( ppos));
 
         if( barriers[i].position.distanceTo( cameraSlice.position) < .1 )
         {
+          console.log( (barriers[i].children[0].rotation.z%(2*Math.PI)) - ((playerSlice.rotation.z)%(2*Math.PI)) );
           //console.log(barriers[i].getWorldPosition(barriers[i].children[0].children[0].position).distanceTo(cameraSlice.getWorldPosition(playerSlice.children[0].position )));
-          console.log( barriers[i].children[0].rotation.z );
-          if( barriers[i].children[0].rotation.z - (playerSlice.rotation.z) > -.28 && barriers[i].children[0].rotation.z - (playerSlice.rotation.z) <.28 ) {
-             console.log("yeet hit" );
+          //console.log( barriers[i].children[0].rotation.z );
+          if( barriers[i].children[0].rotation.z - (playerSlice.rotation.z)%(2*Math.PI) > -.28 && barriers[i].children[0].rotation.z - (playerSlice.rotation.z)%(2*Math.PI) <.28 ) {
+             //console.log("yeet hit" );
              return true;
            }
 
@@ -184,7 +185,7 @@ class Game extends Component {
       }
       if (key === "d") {
         // console.log(key);
-        playerSlice.rotation.z -= 0.1;
+        playerSlice.rotation.z += (2*Math.PI) - 0.1;
       }
 
       renderer.render(scene, camera);
