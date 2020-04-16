@@ -74,7 +74,7 @@ class Game extends Component {
     // barriers
     const barriers = [];
     var barrierGeo = new THREE.BoxGeometry(1.5, 1.5, 1.5);
-    for (let i = 0; i < 100; i++) {
+    for (let i = 10; i < 1000; i++) {
       var barrierMat = new THREE.MeshBasicMaterial({
         color: new THREE.Color(
           `rgb(${Math.floor(Math.random() * 256)},
@@ -86,21 +86,22 @@ class Game extends Component {
       let barrierSlice = new THREE.Object3D();
       let barrierTangentSlice = new THREE.Object3D();
       let b1 = new Barrier(barrierGeo, barrierMat);
-      let point = path.getPointAt((i / 100.0) % 1);
-      let point2 = path.getPointAt((i / 100.0 + 0.00000001) % 1);
+      let point = path.getPointAt((i / 1000.0) % 1);
+      let point2 = path.getPointAt((i / 1000.0 + 0.00000001) % 1);
       //console.log((i / 100.0) % 1);
       b1.cube.position.set(0, 5.5, 0);
       barrierTangentSlice.position.set(point.x, point.y, point.z);
       barrierTangentSlice.lookAt(point2.x, point2.y, point2.z);
-      barrierTangentSlice.add(barrierSlice);
-      //barrierSlice.rotation.z = Math.random() * 2 * Math.PI;
+      barrierSlice.rotation.z = Math.random() * 2 * Math.PI;
       barrierSlice.add(b1.cube);
+      barrierTangentSlice.add(barrierSlice);
+
       barriers.push(barrierTangentSlice);
 
       scene.add(barrierTangentSlice);
     }
     // console.log('first cube')
-    console.log(getWorld(barriers[5]));
+    //console.log(getWorld(barriers[5]));
     // console.log(barriers);
     tube.name = "tube";
     // console.log(tube);
@@ -117,9 +118,10 @@ class Game extends Component {
         if( barriers[i].position.distanceTo( cameraSlice.position) < .1 )
         {
           //console.log(barriers[i].getWorldPosition(barriers[i].children[0].children[0].position).distanceTo(cameraSlice.getWorldPosition(playerSlice.children[0].position )));
-          //console.log( barriers[i].children[0].children[0].rotation.z - (playerSlice.rotation.z));
-          if( barriers[i].children[0].children[0].rotation.z - (playerSlice.rotation.z) > -.28 && barriers[i].children[0].children[0].rotation.z - (playerSlice.rotation.z) <.28 ) {
+          console.log( barriers[i].children[0].rotation.z );
+          if( barriers[i].children[0].rotation.z - (playerSlice.rotation.z) > -.28 && barriers[i].children[0].rotation.z - (playerSlice.rotation.z) <.28 ) {
              console.log("yeet hit" );
+             return true;
            }
 
         }
@@ -158,7 +160,7 @@ class Game extends Component {
     var t = 0;
 
     var animate = function () {
-      requestAnimationFrame(animate);
+
 
       var delta = 0.0001;
       t += delta;
@@ -177,16 +179,19 @@ class Game extends Component {
       cameraSlice.lookAt(playerTarg.x, playerTarg.y, playerTarg.z);
 
       if (key === "a") {
-        console.log(key);
-        playerSlice.rotation.z += 0.01;
+        //console.log(key);
+        playerSlice.rotation.z += 0.1;
       }
       if (key === "d") {
         // console.log(key);
-        playerSlice.rotation.z -= 0.01;
+        playerSlice.rotation.z -= 0.1;
       }
 
       renderer.render(scene, camera);
-      checkCollision();
+      if (!checkCollision()) {
+        requestAnimationFrame(animate);
+      }
+
     };
     animate();
   }
