@@ -26,7 +26,7 @@ class Game extends Component {
       75,
       window.innerWidth / window.innerHeight,
       0.1,
-      1000
+      200
     );
 
     var renderer = new THREE.WebGLRenderer();
@@ -37,10 +37,10 @@ class Game extends Component {
 
     var points = [
       //x    z     y
-      [0, 0, 0],
-      [100, 100, 0],
-      [0, 500, 0],
-      [300, 500, 0],
+      [400, 0, -100],
+      [400, 100, 100],
+      [0, 500, 200],
+      [300, 500, 100],
     ];
 
     //Convert the array of points into vertices
@@ -54,16 +54,22 @@ class Game extends Component {
     console.log(points);
     //Create a path from the points
     var path = new THREE.CatmullRomCurve3(points);
-
+    //CubicBezierCurve3
     //TubeGeometry
-    var geometry2 = new THREE.TubeGeometry(path, 100, 10, 10, true);
+    var geometry2 = new THREE.TubeGeometry(path, 100, 10, 15, true);
 
     //Basic red material
     var material2 = new THREE.MeshBasicMaterial({
-      color: 0x555,
+      color: 0xfff,
       side: THREE.BackSide,
       wireframe: true,
+      transparent: false
     });
+
+    var texture = new THREE.TextureLoader().load( 'texture.jpg' );
+    console.log(texture);
+    var textureMaterial = new THREE.MeshBasicMaterial( { map: texture } );
+
 
     //tube
     var tube = new THREE.Mesh(geometry2, material2);
@@ -148,7 +154,7 @@ class Game extends Component {
     document.addEventListener("keyup", (event) => {
       key = "";
     });
-    var t = 0;
+    var t = .01;
 
     var animate = () => {
       var delta = 0.0001;
@@ -168,10 +174,10 @@ class Game extends Component {
       cameraSlice.lookAt(playerTarg.x, playerTarg.y, playerTarg.z);
 
       if (key === "a") {
-        playerSlice.rotation.z += 0.01;
+        playerSlice.rotation.z += 0.015;
       }
       if (key === "d") {
-        playerSlice.rotation.z += 2 * Math.PI - 0.01;
+        playerSlice.rotation.z += 2 * Math.PI - 0.015;
       }
 
       renderer.render(scene, camera);
