@@ -97,9 +97,9 @@ class Game extends Component {
     for (let i = 30; i < 1000; i++) {
       var barrierMat = new THREE.MeshBasicMaterial({
         color: new THREE.Color(
-          `rgb(${Math.floor(Math.random() * 256)},
-          ${Math.floor(Math.random() * 256)},
-           ${Math.floor(Math.random() * 256)})`
+          `rgb(${Math.floor(Math.random() * 150 + 100)},
+          ${Math.floor(Math.random() * 150)},
+           ${Math.floor(Math.random() * 150)})`
         ),
       });
 
