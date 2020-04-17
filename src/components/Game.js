@@ -25,9 +25,11 @@ class Game extends Component {
     var points = [
       //x    z     y
       [0, 0, 0],
-      [500, 500, 100],
-      [-500,500,-100],
-      [500,500,200]
+      [100, 500, 0],
+      [0,500,0],
+      [300,500,0],
+
+
     ];
 
     //Convert the array of points into vertices
@@ -70,6 +72,7 @@ class Game extends Component {
     const player = new Player(geometry, material);
     player.cube.position.set(0, 5, 0);
     playerSlice.add(player.cube);
+    playerSlice.rotation.z = Math.PI*2;
 
     // barriers
     let barriers = [];
@@ -92,7 +95,7 @@ class Game extends Component {
       b1.cube.position.set(0, 5.5, 0);
       barrierTangentSlice.position.set(point.x, point.y, point.z);
       barrierTangentSlice.lookAt(point2.x, point2.y, point2.z);
-      barrierSlice.rotation.z = Math.random() * 2 * Math.PI;
+    //  barrierSlice.rotation.z = Math.random() * 2 * Math.PI;
       barrierSlice.add(b1.cube);
       barrierTangentSlice.add(barrierSlice);
 
@@ -115,12 +118,12 @@ class Game extends Component {
 
         //console.log(barriers[i].position.distanceTo( ppos));
 
-        if( barriers[i].position.distanceTo( cameraSlice.position) < .1 )
+        if( barriers[i].position.distanceTo( cameraSlice.position) < .5 )
         {
           console.log( (barriers[i].children[0].rotation.z%(2*Math.PI)) - ((playerSlice.rotation.z)%(2*Math.PI)) );
           //console.log(barriers[i].getWorldPosition(barriers[i].children[0].children[0].position).distanceTo(cameraSlice.getWorldPosition(playerSlice.children[0].position )));
           //console.log( barriers[i].children[0].rotation.z );
-          if( barriers[i].children[0].rotation.z - (playerSlice.rotation.z)%(2*Math.PI) > -.28 && barriers[i].children[0].rotation.z - (playerSlice.rotation.z)%(2*Math.PI) <.28 ) {
+          if( barriers[i].children[0].rotation.z%(2*Math.PI) - (playerSlice.rotation.z%(2*Math.PI))%(2*Math.PI) > -.28 && barriers[i].children[0].rotation.z%(2*Math.PI) - (playerSlice.rotation.z%(2*Math.PI))%(2*Math.PI) <.28 ) {
              //console.log("yeet hit" );
              return true;
            }
@@ -170,7 +173,7 @@ class Game extends Component {
       var camPos = path.getPointAt(t % 1);
       var camTarg = path.getPointAt((t + delta) % 1);
       var playerPos = path.getPointAt((t + 0.005) % 1);
-      var playerTarg = path.getPointAt((t + 0.0051) % 1);
+      var playerTarg = path.getPointAt((t + 0.00500000001) % 1);
 
       camera.position.set(camPos.x, camPos.y, camPos.z);
       camera.lookAt(camTarg.x, camTarg.y, camTarg.z);
@@ -181,11 +184,11 @@ class Game extends Component {
 
       if (key === "a") {
         //console.log(key);
-        playerSlice.rotation.z += 0.1;
+        playerSlice.rotation.z += 0.05;
       }
       if (key === "d") {
         // console.log(key);
-        playerSlice.rotation.z += (2*Math.PI) - 0.1;
+        playerSlice.rotation.z += (2*Math.PI) - 0.05;
       }
 
       renderer.render(scene, camera);
