@@ -4,8 +4,21 @@ import Player from "./Player";
 import Barrier from "./Barrier";
 
 class Game extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      t: 0,
+      gameOver: false,
+    };
+  }
+
+  endGame(score) {
+    this.props.submitScore(score);
+  }
+
   componentDidMount() {
-    // === THREE.JS CODE START ===
+    console.log("props", this.props);
+    console.log("state", this.state);
     var scene = new THREE.Scene();
 
     // var camera = new THREE.PerspectiveCamera(FOV, aspect ratio, near clipping plane, far clipping pane);
@@ -25,9 +38,9 @@ class Game extends Component {
     var points = [
       //x    z     y
       [0, 0, 0],
-      [500, 500, 100],
-      [-500,500,-100],
-      [500,500,200]
+      [100, 100, 0],
+      [0, 500, 0],
+      [300, 500, 0],
     ];
 
     //Convert the array of points into vertices
@@ -70,11 +83,12 @@ class Game extends Component {
     const player = new Player(geometry, material);
     player.cube.position.set(0, 5, 0);
     playerSlice.add(player.cube);
+    playerSlice.rotation.z = Math.PI;
 
     // barriers
     let barriers = [];
     var barrierGeo = new THREE.BoxGeometry(1.5, 1.5, 1.5);
-    for (let i = 10; i < 1000; i++) {
+    for (let i = 30; i < 1000; i++) {
       var barrierMat = new THREE.MeshBasicMaterial({
         color: new THREE.Color(
           `rgb(${Math.floor(Math.random() * 256)},
@@ -88,7 +102,6 @@ class Game extends Component {
       let b1 = new Barrier(barrierGeo, barrierMat);
       let point = path.getPointAt((i / 1000.0) % 1);
       let point2 = path.getPointAt((i / 1000.0 + 0.00000001) % 1);
-      //console.log((i / 100.0) % 1);
       b1.cube.position.set(0, 5.5, 0);
       barrierTangentSlice.position.set(point.x, point.y, point.z);
       barrierTangentSlice.lookAt(point2.x, point2.y, point2.z);
@@ -100,52 +113,30 @@ class Game extends Component {
 
       scene.add(barrierTangentSlice);
     }
-    // console.log('first cube')
-    //console.log(getWorld(barriers[5]));
-    // console.log(barriers);
     tube.name = "tube";
-    // console.log(tube);
 
-    function checkCollision (){
-
-    //  console.log(ppos);
-    //console.log();
-      for(let i =0; i<990; i++)
-      {
-
+    function checkCollision() {
+      //  console.log(ppos);
+      for (let i = 0; i < 970; i++) {
         //console.log(barriers[i].position.distanceTo( ppos));
 
-        if( barriers[i].position.distanceTo( cameraSlice.position) < .1 )
-        {
-          console.log( (barriers[i].children[0].rotation.z%(2*Math.PI)) - ((playerSlice.rotation.z)%(2*Math.PI)) );
+        if (barriers[i].position.distanceTo(cameraSlice.position) < 0.5) {
+          //console.log((barriers[i].children[0].rotation.z % (2 * Math.PI)) -(playerSlice.rotation.z % (2 * Math.PI)) );
           //console.log(barriers[i].getWorldPosition(barriers[i].children[0].children[0].position).distanceTo(cameraSlice.getWorldPosition(playerSlice.children[0].position )));
           //console.log( barriers[i].children[0].rotation.z );
-          if( barriers[i].children[0].rotation.z - (playerSlice.rotation.z)%(2*Math.PI) > -.28 && barriers[i].children[0].rotation.z - (playerSlice.rotation.z)%(2*Math.PI) <.28 ) {
-             console.log("yeet hit" );
-             return true;
-           }
-
+          if (
+            (barriers[i].children[0].rotation.z % (2 * Math.PI)) -
+              ((playerSlice.rotation.z % (2 * Math.PI)) % (2 * Math.PI)) >
+              -0.28 &&
+            (barriers[i].children[0].rotation.z % (2 * Math.PI)) -
+              ((playerSlice.rotation.z % (2 * Math.PI)) % (2 * Math.PI)) <
+              0.28
+          ) {
+            //console.log("yeet hit" );
+            return true;
+          }
         }
       }
-      // var originPoint = player.cube.position.clone();
-      // // console.log(barriers)
-    	// for (var vertexIndex = 0; vertexIndex < player.cube.geometry.vertices.length; vertexIndex++)
-    	// {
-      //
-    	// 	var ray = new THREE.Raycaster( playerSlice.getWorldPosition(player.cube.position), playerSlice.getWorldPosition(player.cube.geometry.vertices[vertexIndex]));
-      //   var collisionResults = ray.intersectObjects( barriers.map(b => getWorld(b)) );
-      //
-      //
-    	// 	if ( collisionResults.length > 0)
-    	// 	{
-      //     console.log("hit");
-      //     // hit = true;
-      //    }
-      // }
-    }
-    function getWorld(b) {
-      console.log(b);
-      //return b.getWorldposition(b.barrierSlice.b1.cube.position);
     }
 
     //movement
@@ -157,20 +148,17 @@ class Game extends Component {
     document.addEventListener("keyup", (event) => {
       key = "";
     });
-
     var t = 0;
 
-    var animate = function () {
-
-
+    var animate = () => {
       var delta = 0.0001;
       t += delta;
 
       //console.log(playerSlice.getWorldPosition(player.cube.position))
       var camPos = path.getPointAt(t % 1);
-      var camTarg = path.getPointAt((t + delta) % 1);
-      var playerPos = path.getPointAt((t + 0.005) % 1);
-      var playerTarg = path.getPointAt((t + 0.0051) % 1);
+      var camTarg = path.getPointAt((t + 0.00000001) % 1);
+      var playerPos = path.getPointAt((t + 0.01) % 1);
+      var playerTarg = path.getPointAt((t + 0.01000000001) % 1);
 
       camera.position.set(camPos.x, camPos.y, camPos.z);
       camera.lookAt(camTarg.x, camTarg.y, camTarg.z);
@@ -180,21 +168,25 @@ class Game extends Component {
       cameraSlice.lookAt(playerTarg.x, playerTarg.y, playerTarg.z);
 
       if (key === "a") {
-        //console.log(key);
-        playerSlice.rotation.z += 0.1;
+        playerSlice.rotation.z += 0.01;
       }
       if (key === "d") {
-        // console.log(key);
-        playerSlice.rotation.z += (2*Math.PI) - 0.1;
+        playerSlice.rotation.z += 2 * Math.PI - 0.01;
       }
 
       renderer.render(scene, camera);
       if (!checkCollision()) {
+        //this.props.submitScore(t);
         requestAnimationFrame(animate);
+      } else {
+        this.props.submitScore(t);
+        // endGame(t);
+        console.log("submitted");
       }
-
     };
     animate();
+    // this.props.submitScore(t);
+    console.log("post");
   }
   render() {
     return <div></div>;
