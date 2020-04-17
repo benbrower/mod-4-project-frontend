@@ -6,10 +6,14 @@ const NavBar = (props) => {
 
   return (
     <div className="navbar">
-      <NavLink to="/">Login</NavLink>
+      {props.logged_in ? (
+        <button onClick={handleLogout}>Log Out</button>
+      ) : (
+        <NavLink to="/">Log In</NavLink>
+      )}
+
       <NavLink to="/leaderboard">Leaderboard</NavLink>
       <NavLink to="/play">Play</NavLink>
-      {props.logged_in ? <button onClick={handleLogout}>Log Out</button> : null}
     </div>
   );
 };

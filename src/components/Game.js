@@ -3,11 +3,14 @@ import React, { Component } from "react";
 import Player from "./Player";
 import Barrier from "./Barrier";
 
+var started = false;
+
 class Game extends Component {
   constructor(props) {
+    console.log("creating game");
     super(props);
     this.state = {
-      t: 0,
+      score: 0,
       gameOver: false,
     };
   }
@@ -63,13 +66,12 @@ class Game extends Component {
       color: 0xfff,
       side: THREE.BackSide,
       wireframe: true,
-      transparent: false
+      transparent: false,
     });
 
-    var texture = new THREE.TextureLoader().load( 'texture.jpg' );
+    var texture = new THREE.TextureLoader().load("texture.jpg");
     console.log(texture);
-    var textureMaterial = new THREE.MeshBasicMaterial( { map: texture } );
-
+    var textureMaterial = new THREE.MeshBasicMaterial({ map: texture });
 
     //tube
     var tube = new THREE.Mesh(geometry2, material2);
@@ -154,11 +156,14 @@ class Game extends Component {
     document.addEventListener("keyup", (event) => {
       key = "";
     });
-    var t = .01;
+    var t = 0.01;
 
     var animate = () => {
-      var delta = 0.0001;
+      var delta = 0.00005;
       t += delta;
+      this.setState({
+        score: Math.floor(t * 1000),
+      });
 
       //console.log(playerSlice.getWorldPosition(player.cube.position))
       var camPos = path.getPointAt(t % 1);
@@ -185,17 +190,22 @@ class Game extends Component {
         //this.props.submitScore(t);
         requestAnimationFrame(animate);
       } else {
-        this.props.submitScore(t);
-        // endGame(t);
-        console.log("submitted");
+        this.props.submitScore(this.state.score);
+        this.setState({
+          gameOver: true,
+        });
+        console.log(this.state.gameOver);
+        console.log(this.state.score);
       }
     };
-    animate();
+    if (!started) {
+      animate();
+    }
     // this.props.submitScore(t);
     console.log("post");
   }
   render() {
-    return <div></div>;
+    return <div>Score: {this.state.score}</div>;
   }
 }
 export default Game;

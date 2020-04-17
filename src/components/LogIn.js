@@ -27,7 +27,9 @@ class LogIn extends Component {
   };
 
   render() {
-    return (
+    return this.props.logged_in ? (
+      <div>Welcome, {this.props.user.username}</div>
+    ) : (
       <div>
         <form onSubmit={this.handleSubmit}>
           <div>
@@ -48,7 +50,7 @@ class LogIn extends Component {
               <input
                 id="passsword"
                 name="password"
-                type="text"
+                type="password"
                 onChange={this.handlePasswordChange}
                 value={this.state.password}
               />

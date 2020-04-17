@@ -123,6 +123,7 @@ export default class App extends Component {
               <LogIn
                 user={this.state.user}
                 handleLogin={this.handleLogin.bind(this)}
+                logged_in={this.state.logged_in}
               />
             )}
           />
