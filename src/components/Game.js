@@ -121,7 +121,7 @@ class Game extends Component {
           //console.log(barriers[i].getWorldPosition(barriers[i].children[0].children[0].position).distanceTo(cameraSlice.getWorldPosition(playerSlice.children[0].position )));
           //console.log( barriers[i].children[0].rotation.z );
           if( barriers[i].children[0].rotation.z - (playerSlice.rotation.z)%(2*Math.PI) > -.28 && barriers[i].children[0].rotation.z - (playerSlice.rotation.z)%(2*Math.PI) <.28 ) {
-             //console.log("yeet hit" );
+             console.log("yeet hit" );
              return true;
            }
 
