@@ -159,7 +159,7 @@ class Game extends Component {
     var t = 0.01;
     var i = 0;
     var animate = () => {
-      var delta = 0.00005+(i/1000.0);
+      var delta = 0.00015 + i / 1000.0;
       t += delta;
       this.setState({
         score: Math.floor(t * 1000),
